@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -u
+set -e
+
+# Test Java code
+# Usage:
+# ./build-scripts/test-java CLASSPATH BINDIR
+
+# Finds all test classes inside BINDIR and runs them with JUnit
+
+CP="lib/org.hamcrest.core_1.3.0.jar:lib/junit.jar:lib/mockito-core-5.5.0.jar:lib/byte-buddy-agent-1.14.5.jar:lib/byte-buddy-1.14.5.jar"
+DESTDIR="src/ui-swing/bin:src/engine/bin:src/render/bin"
+
+CLASSES="rabbitescape.ui.swing.GameUiTestMain rabbitescape.engine.RabbitBehaviourManagerTestMain rabbitescape.engine.TokenStateFactoryTest rabbitescape.engine.BlockTestMain"
+set +e
+
+
+OUTPUT=$(
+    java \
+    -classpath "$CP:$DESTDIR" \
+    org.junit.runner.JUnitCore \
+    $CLASSES 2>&1
+)
+
+set -e
+
+echo "$OUTPUT" 1>&2
